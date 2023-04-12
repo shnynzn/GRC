@@ -2,7 +2,7 @@ import tensorflow as tf
 import cv2
 import numpy as np
 from tensorflow.keras.models import Model
-
+'''
 @tf.function
 def train_step(features, labels):
     with tf.GradientTape() as tape:
@@ -13,7 +13,7 @@ def train_step(features, labels):
     self.optimizer.apply_gradients(zip(gradients, self.model.trainable_variables))
     
     return loss
-
+'''
 class GradCAM:
     # Adapted with some modification from https://www.pyimagesearch.com/2020/03/09/grad-cam-visualize-class-activation-maps-with-keras-tensorflow-and-deep-learning/
     def __init__(self, model, layerName=None):
@@ -31,22 +31,28 @@ class GradCAM:
             if len(layer.output_shape) == 4:
                 return layer.name
         raise ValueError("Could not find 4D layer. Cannot apply GradCAM")
-
+    
+    @tf.function
     def compute_heatmap(self, image, classIdx, upsample_size, eps=1e-5):
         gradModel = Model(
             inputs=[self.model.inputs],
             outputs=[self.model.get_layer(self.layerName).output, self.model.output]
         )
         # record operations for automatic differentiation
-        '''
+        
         with tf.GradientTape() as tape:
             inputs = tf.cast(image, tf.float32)
+            batch_output = self.model([input_sequences_batch, output_sequences_batch])
+            loss = self.loss_fn(data[1, current_index:current_index + batch_size, :], batch_output)
             (convOuts, preds) = gradModel(inputs)  # preds after softmax
             loss = preds[:, classIdx]
-
+        
         # compute gradients with automatic differentiation
-        grads = tape.gradient(loss, convOuts)
-        '''
+        #grads = tape.gradient(loss, convOuts)
+        gradients = tape.gradient(loss, self.model.trainable_variables)
+        self.optimizer.apply_gradients(zip(gradients, self.model.trainable_variables))
+    
+        return loss
     
         loss = train_step([input_sequences_batch, output_sequences_batch],
                                data[1, current_index:current_index + batch_size, :])
