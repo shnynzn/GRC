@@ -3,6 +3,16 @@ import cv2
 import numpy as np
 from tensorflow.keras.models import Model
 
+@tf.function
+def train_step(features, labels):
+    with tf.GradientTape() as tape:
+        batch_output = self.model([input_sequences_batch, output_sequences_batch])
+        loss = self.loss_fn(data[1, current_index:current_index + batch_size, :], batch_output)
+
+    gradients = tape.gradient(loss, self.model.trainable_variables)
+    self.optimizer.apply_gradients(zip(gradients, self.model.trainable_variables))
+    
+    return loss
 
 class GradCAM:
     # Adapted with some modification from https://www.pyimagesearch.com/2020/03/09/grad-cam-visualize-class-activation-maps-with-keras-tensorflow-and-deep-learning/
@@ -37,16 +47,6 @@ class GradCAM:
         # compute gradients with automatic differentiation
         grads = tape.gradient(loss, convOuts)
         '''
-    
-    @tf.function
-    def train_step(features, labels):
-        with tf.GradientTape() as tape:
-            batch_output = self.model([input_sequences_batch, output_sequences_batch])
-            loss = self.loss_fn(data[1, current_index:current_index + batch_size, :], batch_output)
-
-        gradients = tape.gradient(loss, self.model.trainable_variables)
-        self.optimizer.apply_gradients(zip(gradients, self.model.trainable_variables))
-        return loss
     
         loss = train_step([input_sequences_batch, output_sequences_batch],
                                data[1, current_index:current_index + batch_size, :])
