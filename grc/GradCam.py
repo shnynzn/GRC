@@ -32,18 +32,18 @@ class GradCAM:
                 return layer.name
         raise ValueError("Could not find 4D layer. Cannot apply GradCAM")
     
-    @tf.function
+  
     def compute_heatmap(self, image, classIdx, upsample_size, eps=1e-5):
         gradModel = Model(
             inputs=[self.model.inputs],
             outputs=[self.model.get_layer(self.layerName).output, self.model.output]
         )
         # record operations for automatic differentiation
-        
+    @tf.function
         with tf.GradientTape() as tape:
             inputs = tf.cast(image, tf.float32)
-            batch_output = self.model([input_sequences_batch, output_sequences_batch])
-            loss = self.loss_fn(data[1, current_index:current_index + batch_size, :], batch_output)
+            #batch_output = self.model([input_sequences_batch, output_sequences_batch])
+            #loss = self.loss_fn(data[1, current_index:current_index + batch_size, :], batch_output)
             (convOuts, preds) = gradModel(inputs)  # preds after softmax
             loss = preds[:, classIdx]
         
