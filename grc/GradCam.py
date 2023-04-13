@@ -39,6 +39,7 @@ class GradCAM:
             outputs=[self.model.get_layer(self.layerName).output, self.model.output]
         )
         # record operations for automatic differentiation
+        
         @tf.function
         with tf.GradientTape() as tape:
             inputs = tf.cast(image, tf.float32)
