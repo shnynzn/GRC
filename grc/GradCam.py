@@ -37,7 +37,8 @@ class GradCAM:
         if self.inner_model == None:
             self.inner_model = model
         
-        self.layerName = layerName 
+        if self.layerName == None:
+            self.layerName = self.find_target_layer()
 
     def find_target_layer(self):
         for layer in reversed(self.model.layers):
