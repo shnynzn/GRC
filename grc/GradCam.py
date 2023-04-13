@@ -90,6 +90,6 @@ def overlay_gradCAM(img, cam3):
     cam3 = np.uint8(255 * cam3)
     cam3 = cv2.applyColorMap(cam3, cv2.COLORMAP_JET)
 
-    new_img = 0.3 * cam3 + 0.5 * (img.astype("float32"))
+    new_img = 0.3 * cam3 + 0.5 * (img.astype(float)/255)
 
     return (new_img * 255.0) / (new_img.max()).astype("uint8")
