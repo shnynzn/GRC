@@ -10,12 +10,6 @@ def train_step(features, labels):
     
     return loss
 '''
-import tensorflow as tf
-import cv2
-import numpy as np
-from tensorflow.keras.models import Model
-
-
 """class GradCAM:
     # Adapted with some modification from https://www.pyimagesearch.com/2020/03/09/grad-cam-visualize-class-activation-maps-with-keras-tensorflow-and-deep-learning/
     def __init__(self, model, layerName=None):
@@ -27,6 +21,12 @@ from tensorflow.keras.models import Model
 
         if self.layerName == None:
             self.layerName = self.find_target_layer()"""
+
+
+import tensorflow as tf
+import cv2
+import numpy as np
+from tensorflow.keras.models import Model
 
 class GradCAM:
     def __init__(self, model, classIdx, inner_model=None, layerName=None):
