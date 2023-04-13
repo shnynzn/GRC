@@ -27,13 +27,16 @@ from tensorflow.keras.models import Model
 
         if self.layerName == None:
             self.layerName = self.find_target_layer()"""
+
 class GradCAM:
     def __init__(self, model, classIdx, inner_model=None, layerName=None):
         self.model = model
         self.classIdx = classIdx
         self.inner_model = inner_model
+        
         if self.inner_model == None:
             self.inner_model = model
+        
         self.layerName = layerName 
 
     def find_target_layer(self):
@@ -49,9 +52,10 @@ class GradCAM:
         )'''
         # record operations for automatic differentiation
     def compute_heatmap(self, image, classIdx, upsample_size, eps=1e-5):
-        gradModel = tensorflow.keras.models.Model(inputs=[self.inner_model.inputs],
-                  outputs=[self.inner_model.get_layer(self.layerName).output,
-                  self.inner_model.output]) 
+        gradModel = Model(
+            inputs=[self.inner_model.inputs],
+            outputs=[self.inner_model.get_layer(self.layerName).output,
+                     self.inner_model.output]) 
         
         with tf.GradientTape() as tape:
             inputs = tf.cast(image, tf.float32)
