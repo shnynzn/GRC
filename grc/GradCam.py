@@ -16,7 +16,7 @@ import numpy as np
 from tensorflow.keras.models import Model
 
 
-class GradCAM:
+"""class GradCAM:
     # Adapted with some modification from https://www.pyimagesearch.com/2020/03/09/grad-cam-visualize-class-activation-maps-with-keras-tensorflow-and-deep-learning/
     def __init__(self, model, layerName=None):
         """
@@ -26,7 +26,15 @@ class GradCAM:
         self.layerName = layerName
 
         if self.layerName == None:
-            self.layerName = self.find_target_layer()
+            self.layerName = self.find_target_layer()"""
+class My_GradCAM:
+    def __init__(self, model, classIdx, inner_model=None, layerName=None):
+        self.model = model
+        self.classIdx = classIdx
+        self.inner_model = inner_model
+        if self.inner_model == None:
+            self.inner_model = model
+        self.layerName = layerName 
 
     def find_target_layer(self):
         for layer in reversed(self.model.layers):
@@ -34,13 +42,17 @@ class GradCAM:
                 return layer.name
         raise ValueError("Could not find 4D layer. Cannot apply GradCAM")
 
-    def compute_heatmap(self, image, classIdx, upsample_size, eps=1e-5):
+    '''def compute_heatmap(self, image, classIdx, upsample_size, eps=1e-5):
         gradModel = Model(
             inputs=[self.model.inputs],
             outputs=[self.model.get_layer(self.layerName).output, self.model.output]
-        )
+        )'''
         # record operations for automatic differentiation
-
+    def compute_heatmap(self, image, classIdx, upsample_size, eps=1e-5):
+        gradModel = tensorflow.keras.models.Model(inputs=[self.inner_model.inputs],
+                  outputs=[self.inner_model.get_layer(self.layerName).output,
+                  self.inner_model.output]) 
+        
         with tf.GradientTape() as tape:
             inputs = tf.cast(image, tf.float32)
             (convOuts, preds) = gradModel(inputs)  # preds after softmax
