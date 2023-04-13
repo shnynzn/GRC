@@ -93,4 +93,4 @@ def overlay_gradCAM(img, cam3):
 
     new_img = 0.3 * cam3 + 0.5 * img
 
-    return (new_img * 255.0) / (new_img.astype("uint8")
+    return (new_img * 255.0) / (new_img.astype("uint8"))
