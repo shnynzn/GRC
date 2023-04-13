@@ -1,7 +1,3 @@
-import tensorflow as tf
-import cv2
-import numpy as np
-from tensorflow.keras.models import Model
 '''
 @tf.function
 def train_step(features, labels):
@@ -14,6 +10,12 @@ def train_step(features, labels):
     
     return loss
 '''
+import tensorflow as tf
+import cv2
+import numpy as np
+from tensorflow.keras.models import Model
+
+
 class GradCAM:
     # Adapted with some modification from https://www.pyimagesearch.com/2020/03/09/grad-cam-visualize-class-activation-maps-with-keras-tensorflow-and-deep-learning/
     def __init__(self, model, layerName=None):
@@ -31,7 +33,7 @@ class GradCAM:
             if len(layer.output_shape) == 4:
                 return layer.name
         raise ValueError("Could not find 4D layer. Cannot apply GradCAM")
-    
+
     def compute_heatmap(self, image, classIdx, upsample_size, eps=1e-5):
         gradModel = Model(
             inputs=[self.model.inputs],
