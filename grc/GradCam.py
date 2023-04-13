@@ -40,13 +40,13 @@ class GradCAM:
         )
         # record operations for automatic differentiation
         
-        @tf.function
-        with tf.GradientTape() as tape:
-            inputs = tf.cast(image, tf.float32)
-            #batch_output = self.model([input_sequences_batch, output_sequences_batch])
-            #loss = self.loss_fn(data[1, current_index:current_index + batch_size, :], batch_output)
-            (convOuts, preds) = gradModel(inputs)  # preds after softmax
-            loss = preds[:, classIdx]
+    @tf.function
+    with tf.GradientTape() as tape:
+        inputs = tf.cast(image, tf.float32)
+        #batch_output = self.model([input_sequences_batch, output_sequences_batch])
+        #loss = self.loss_fn(data[1, current_index:current_index + batch_size, :], batch_output)
+        (convOuts, preds) = gradModel(inputs)  # preds after softmax
+        loss = preds[:, classIdx]
         
         # compute gradients with automatic differentiation
         #grads = tape.gradient(loss, convOuts)
