@@ -27,7 +27,7 @@ from tensorflow.keras.models import Model
 
         if self.layerName == None:
             self.layerName = self.find_target_layer()"""
-class My_GradCAM:
+class GradCAM:
     def __init__(self, model, classIdx, inner_model=None, layerName=None):
         self.model = model
         self.classIdx = classIdx
