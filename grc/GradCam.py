@@ -33,9 +33,8 @@ import numpy as np
 from tensorflow.keras.models import Model
 
 class GradCAM:
-    def __init__(self, model, classIdx, inner_model=None, layerName=None):
-        self.model = model    
-        self.classIdx = classIdx
+    def __init__(self, model, inner_model=None, layerName=None):
+        self.model = model
         self.inner_model = inner_model
             if self.inner_model == None:
                 self.inner_model = self.model
