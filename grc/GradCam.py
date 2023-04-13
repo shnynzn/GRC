@@ -20,7 +20,7 @@ from tensorflow.keras.models import Model
     # Adapted with some modification from https://www.pyimagesearch.com/2020/03/09/grad-cam-visualize-class-activation-maps-with-keras-tensorflow-and-deep-learning/
     def __init__(self, model, layerName=None):
         """
-        #model: pre-softmax layer (logit layer)
+    #model: pre-softmax layer (logit layer)
         """
         self.model = model
         self.layerName = layerName
