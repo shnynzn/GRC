@@ -46,16 +46,18 @@ class GradCAM:
             #batch_output = self.model([input_sequences_batch, output_sequences_batch])
             #loss = self.loss_fn(data[1, current_index:current_index + batch_size, :], batch_output)
             (convOuts, preds) = gradModel(inputs)  # preds after softmax
-            loss = preds[:, classIdx]
-
-            # compute gradients with automatic differentiation
-            #grads = tape.gradient(loss, convOuts)
-            gradients = tape.gradient(loss, self.model.trainable_variables)
-            self.optimizer.apply_gradients(zip(gradients, self.model.trainable_variables))
-    
         return loss
     
-        loss = train_step([input_sequences_batch, output_sequences_batch],
+        loss = preds[:, classIdx]
+
+        # compute gradients with automatic differentiation
+        #grads = tape.gradient(loss, convOuts)
+        gradients = tape.gradient(loss, self.model.trainable_variables)
+        self.optimizer.apply_gradients(zip(gradients, self.model.trainable_variables))
+    
+        
+    
+        #loss = train_step([input_sequences_batch, output_sequences_batch],
                                data[1, current_index:current_index + batch_size, :])
         # discard batch
         convOuts = convOuts[0]
