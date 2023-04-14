@@ -55,11 +55,9 @@ class GradCAM:
         # record operations for automatic differentiation
     def compute_heatmap(self, image, classIdx, upsample_size, eps=1e-5):
         gradModel = Model(
-            inputs=[self.model.inputs, self.inner_model.inputs],
+            inputs=[self.inner_model.inputs],
             outputs=[self.model.get_layer(self.layerName).output,
-                     self.model.output,
-                     self.inner_model.get_layer(self.layerName).output,
-                     self.inner_model.output]) 
+                     self.model.output]) 
         
         with tf.GradientTape() as tape:
             inputs = tf.cast(image, tf.float32)
@@ -91,9 +89,8 @@ class GradCAM:
 
 def overlay_gradCAM(img, cam3):
     cam3 = np.uint8(255 * cam3)
-    #img= tf.cast(img, tf.float32)
     cam3 = cv2.applyColorMap(cam3, cv2.COLORMAP_JET)
 
-    new_img = 0.3 * cam3 + 0.5 * img.astype('uint8')
+    new_img = 0.3 * cam3 + 0.5 * img
 
-    return (new_img * 255.0) / (new_img).astype('uint8')
+    return (new_img * 255.0 / new_img.max()).astype("uint8")
