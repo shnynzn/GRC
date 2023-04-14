@@ -23,7 +23,7 @@ class GradCAM:
     def compute_heatmap(self, image, classIdx, upsample_size, eps=1e-5):
         gradModel = Model(
             inputs=[self.model.inputs],
-            outputs=[self.model.(self.layerName).output,
+            outputs=[self.model.get_layer(self.layerName).output,
                      self.model.output]) 
         
         with tf.GradientTape() as tape:
