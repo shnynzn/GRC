@@ -55,7 +55,7 @@ class GradCAM:
         # record operations for automatic differentiation
     def compute_heatmap(self, image, classIdx, upsample_size, eps=1e-5):
         gradModel = Model(
-            inputs=[self.inner_model.inputs],
+            inputs=[self.model.inputs],
             outputs=[self.model.(self.layerName).output,
                      self.model.output]) 
         
@@ -83,14 +83,32 @@ class GradCAM:
         # convert to 3D
         cam3 = np.expand_dims(cam, axis=2)
         cam3 = np.tile(cam3, [1, 1, 3])
+        
+        # Normalize the heatmap
+        cam3 = tf.maximum(cam3, 0) / tf.math.reduce_max(cam3) 
 
-        return cam3
+        return cam3.numpy()
 
+plt.matshow(GradCam(self, model, inner_model=None, layerName=None))
+plt.show()
 
-def overlay_gradCAM(img, cam3):
-    cam3 = np.uint8(255 * cam3)
-    cam3 = cv2.applyColorMap(cam3, cv2.COLORMAP_JET)
-
-    new_img = 0.3 * cam3 + 0.5 * img
-
-    return (new_img * 255.0 / new_img.max()).astype("uint8")
+def overlay_gradCAM(img, cam3, output_path="grad_cam_image.jpg", alpha=0.4):
+    img= image.img_to_array(img)
+    cam3 = np.uint8(255 * cam3)  # Back scaling to 0-255 from 0 - 1
+    #cam3 = cv2.applyColorMap(cam3, cv2.COLORMAP_JET)
+    jet = c_map.get_cmap("jet") # Colorizing heatmap
+    jet_colors = jet(np.arange(256))[:, :3] # Using RGB values
+    jet_cam3 = jet_colors[cam3]
+    jet_cam3 = image.array_to_img(jet_cam3)
+    jet_cam3 = jet_heatmap.resize((img.shape[1], img.shape[0]))
+    jet_cam3 = image.img_to_array(jet_cam3c)
+    
+    #new_img = 0.3 * cam3 + 0.5 * img
+    
+    new_img = jet_heatmap * alpha + img # Superimposing the heatmap on original image
+    new_img = image.array_to_img(superimposed_img)
+    
+    new_img.save(output_path) # Saving the superimposed image
+    display(Image(output_path)) # Displaying Grad-CAM Superimposed Image
+    
+    #return (new_img * 255.0 / new_img.max()).astype("uint8")
