@@ -70,7 +70,7 @@ def overlay_gradCAM(img, cam3, output_path="grad_cam_image.jpg", alpha=0.4):
     #new_img = 0.3 * cam3 + 0.5 * img
     
     new_img = jet_heatmap * alpha + img # Superimposing the heatmap on original image
-    new_img = image.array_to_img(superimposed_img)
+    new_img = img_to_array(new_img)
     
     new_img.save(output_path) # Saving the superimposed image
     display(Image(output_path)) # Displaying Grad-CAM Superimposed Image
