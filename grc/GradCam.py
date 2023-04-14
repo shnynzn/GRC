@@ -26,6 +26,7 @@ def train_step(features, labels):
             inputs=[self.model.inputs],
             outputs=[self.model.get_layer(self.layerName).output, self.model.output]
         )'''
+# Adapted with some modification from https://www.pyimagesearch.com/2020/03/09/grad-cam-visualize-class-activation-maps-with-keras-tensorflow-and-deep-learning/
 
 import tensorflow as tf
 import cv2
@@ -54,8 +55,10 @@ class GradCAM:
         # record operations for automatic differentiation
     def compute_heatmap(self, image, classIdx, upsample_size, eps=1e-5):
         gradModel = Model(
-            inputs=[self.inner_model.inputs],
-            outputs=[self.inner_model.get_layer(self.layerName).output,
+            inputs=[self.model.inputs, self.inner_model.inputs],
+            outputs=[self.model.get_layer(self.layerName).output,
+                     self.model.output,
+                     self.inner_model.get_layer(self.layerName).output,
                      self.inner_model.output]) 
         
         with tf.GradientTape() as tape:
@@ -88,9 +91,9 @@ class GradCAM:
 
 def overlay_gradCAM(img, cam3):
     cam3 = np.uint8(255 * cam3)
-    img= tf.cast(img, tf.float32)
+    #img= tf.cast(img, tf.float32)
     cam3 = cv2.applyColorMap(cam3, cv2.COLORMAP_JET)
 
-    new_img = 0.3 * cam3 + 0.5 * img
+    new_img = 0.3 * cam3 + 0.5 * img.astype('uint8')
 
-    return (new_img * 255.0) / (new_img)
+    return (new_img * 255.0) / (new_img).astype('uint8')
