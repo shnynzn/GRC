@@ -5,6 +5,7 @@ import cv2
 import numpy as np
 from tensorflow.keras.models import Model
 from tensorflow.keras.preprocessing import image
+import matplotlib.cm as c_map
 
 class GradCAM:
     def __init__(self, model, layerName=None):
