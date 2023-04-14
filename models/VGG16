@@ -1,0 +1,14 @@
+loaded_model= !curl ("https://drive.google.com/file/d/1aFySoyHwqyxju9NhvhAmeyNgBKabt1oy/view?usp=share_link")
+
+loaded_model.compile(
+        loss='binary_crossentropy',
+        optimizer = optimizer,
+        metrics=['accuracy',
+           metrics.Precision(name='precision'),
+           metrics.Recall(name='recall'),
+           F1Score(num_classes = 1,name = 'f1'),
+           tf.keras.metrics.TruePositives(name= 'tp'),
+           tf.keras.metrics.TrueNegatives(name = 'tn'),
+           tf.keras.metrics.FalseNegatives(name = 'fn'),
+           tf.keras.metrics.FalsePositives(name = 'fp')]
+    )
