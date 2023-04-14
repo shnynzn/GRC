@@ -4,6 +4,7 @@ import tensorflow as tf
 import cv2
 import numpy as np
 from tensorflow.keras.models import Model
+from tensorflow.keras.preprocessing import image
 
 class GradCAM:
     def __init__(self, model, layerName=None):
@@ -57,20 +58,20 @@ class GradCAM:
         return cam3.numpy()
 
 def overlay_gradCAM(img, cam3, output_path="grad_cam_image.jpg", alpha=0.4):
-    img= image.img_to_array(img)
+    img= image.array_to_img(img)
     cam3 = np.uint8(255 * cam3)  # Back scaling to 0-255 from 0 - 1
     #cam3 = cv2.applyColorMap(cam3, cv2.COLORMAP_JET)
     jet = c_map.get_cmap("jet") # Colorizing heatmap
     jet_colors = jet(np.arange(256))[:, :3] # Using RGB values
     jet_cam3 = jet_colors[cam3]
-    jet_cam3 = image.array_to_img(jet_cam3)
+    jet_cam3 = image.array_to_imgy(jet_cam3)
     jet_cam3 = jet_heatmap.resize((img.shape[1], img.shape[0]))
-    jet_cam3 = image.img_to_array(jet_cam3c)
+    jet_cam3 = image.array_to_imgy(jet_cam3c)
     
     #new_img = 0.3 * cam3 + 0.5 * img
     
     new_img = jet_heatmap * alpha + img # Superimposing the heatmap on original image
-    new_img = img_to_array(new_img)
+    new_img = image.array_to_img(new_img)
     
     new_img.save(output_path) # Saving the superimposed image
     display(Image(output_path)) # Displaying Grad-CAM Superimposed Image
