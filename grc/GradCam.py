@@ -56,9 +56,6 @@ class GradCAM:
 
         return cam3.numpy()
 
-plt.matshow(GradCam(self, model, inner_model=None, layerName=None))
-plt.show()
-
 def overlay_gradCAM(img, cam3, output_path="grad_cam_image.jpg", alpha=0.4):
     img= image.img_to_array(img)
     cam3 = np.uint8(255 * cam3)  # Back scaling to 0-255 from 0 - 1
