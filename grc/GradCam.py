@@ -1,31 +1,3 @@
-'''
-@tf.function
-def train_step(features, labels):
-    with tf.GradientTape() as tape:
-        batch_output = self.model([input_sequences_batch, output_sequences_batch])
-        loss = self.loss_fn(data[1, current_index:current_index + batch_size, :], batch_output)
-
-    gradients = tape.gradient(loss, self.model.trainable_variables)
-    self.optimizer.apply_gradients(zip(gradients, self.model.trainable_variables))
-    
-    return loss
-'''
-"""class GradCAM:
-    # Adapted with some modification from https://www.pyimagesearch.com/2020/03/09/grad-cam-visualize-class-activation-maps-with-keras-tensorflow-and-deep-learning/
-    def __init__(self, model, layerName=None):
-      
-        #model: pre-softmax layer (logit layer)
-        
-        self.model = model
-        self.layerName = layerName
-
-        if self.layerName == None:
-            self.layerName = self.find_target_layer()"""
-'''def compute_heatmap(self, image, classIdx, upsample_size, eps=1e-5):
-        gradModel = Model(
-            inputs=[self.model.inputs],
-            outputs=[self.model.get_layer(self.layerName).output, self.model.output]
-        )'''
 # Adapted with some modification from https://www.pyimagesearch.com/2020/03/09/grad-cam-visualize-class-activation-maps-with-keras-tensorflow-and-deep-learning/
 
 import tensorflow as tf
@@ -34,13 +6,8 @@ import numpy as np
 from tensorflow.keras.models import Model
 
 class GradCAM:
-    def __init__(self, model, inner_model=None, layerName=None):
+    def __init__(self, model, layerName=None):
         self.model = model
-        self.inner_model = inner_model
-        
-        if self.inner_model == None:
-            self.inner_model = self.model
-        
         self.layerName = layerName
         
         if self.layerName == None:
